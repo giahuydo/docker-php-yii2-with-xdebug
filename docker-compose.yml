@@ -1,0 +1,34 @@
+version: '2'
+services:
+  php:
+    image: yiisoftware/yii2-php:8.0-apache
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
+      - ./:/app:delegated
+    ports:
+      - '8090:80'
+    depends_on:
+      - mysql
+    environment:
+      - PHP_ENABLE_XDEBUG=1
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - '3308:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=yii2basic
+      - MYSQL_USER=giahuy
+      - MYSQL_PASSWORD=123
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8880:80'
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql
+    depends_on:
+      - mysql
